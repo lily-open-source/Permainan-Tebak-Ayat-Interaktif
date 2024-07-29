@@ -39,6 +39,9 @@ int nomorFile;
 unsigned long waktuMulaiBuzzer = 0;
 const unsigned long durasiCuitan = 500;
 bool audioSedangDiputar = false;
+unsigned long waktuPesanMulai = 0;
+const unsigned long durasiPesan = 2000;
+bool pesanAktif = false;
 
 // Function declarations
 void tampilkanMenuUtama();
@@ -59,6 +62,7 @@ void saatTebakanJawaban();
 void pilihCaraMendengarkan();
 void mendengarkanManual();
 void mendengarkanRandom();
+void tampilkanPesan(const char* pesan);
 
 // Setup function
 void setup() {
@@ -80,8 +84,10 @@ void setup() {
 
 // Main loop
 void loop() {
+  unsigned long currentMillis = millis();
+
   // Handle buzzer timing
-  if (waktuMulaiBuzzer > 0 && millis() - waktuMulaiBuzzer >= durasiCuitan) {
+  if (waktuMulaiBuzzer > 0 && currentMillis - waktuMulaiBuzzer >= durasiCuitan) {
     digitalWrite(buzzerPin, LOW);
     waktuMulaiBuzzer = 0;
   }
@@ -97,15 +103,21 @@ void loop() {
   if (key) {
     prosesInputKeypad(key);
   }
+
+  // Handle message display duration
+  if (pesanAktif && currentMillis - waktuPesanMulai >= durasiPesan) {
+    pesanAktif = false;
+    tampilkanMenuUtama();
+  }
 }
 
 // Process keypad input
 void prosesInputKeypad(char key) {
-  if (!audioSedangDiputar) {
+  if (!audioSedangDiputar && !pesanAktif) {
     if (key == '1') {
-      mintaKonfirmasi("Anda yakin?", saatYaMendengarkan, saatTidakMendengarkan);
+      mintaKonfirmasi("Yakin mendengar?", saatYaMendengarkan, saatTidakMendengarkan);
     } else if (key == '2') {
-      mintaKonfirmasi("Anda yakin?", saatYaMenebak, saatTidakMenebak);
+      mintaKonfirmasi("Yakin menebak?", saatYaMenebak, saatTidakMenebak);
     }
   }
 }
@@ -119,6 +131,7 @@ void sistemBerjalan() {
 void jawabanSalah() {
   digitalWrite(buzzerPin, HIGH);
   waktuMulaiBuzzer = millis();
+  dfPlayer.play(286); // Play a specific "wrong answer" sound
 }
 
 // Display main menu
@@ -159,12 +172,12 @@ void modeMendengarkan() {
 // Manual listening
 void mendengarkanManual() {
   lcd.clear();
-  lcd.print("Masukkan nomor file:");
+  lcd.print("Masukkan nomor:");
   char input[4] = "";
   dapatkanInputKeypad(input, sizeof(input));
   nomorFile = atoi(input);
 
-  mintaKonfirmasi("Putar file?", saatPutarFile, tampilkanMenuUtama);
+  mintaKonfirmasi("Putar file ini?", saatPutarFile, tampilkanMenuUtama);
 }
 
 // Random listening
@@ -176,7 +189,7 @@ void mendengarkanRandom() {
 // Guessing mode
 void modeMenebak() {
   nomorFile = random(1, 287);
-  mintaKonfirmasi("Konfirmasi tebakan?", saatTebakanJawaban, tampilkanMenuUtama);
+  mintaKonfirmasi("Tebak nomor?", saatTebakanJawaban, tampilkanMenuUtama);
 }
 
 // Request confirmation
@@ -206,7 +219,7 @@ void dapatkanInputKeypad(char* bufferInput, size_t ukuranBuffer) {
     char key = keypad.getKey();
     if (key) {
       bufferInput[indeks++] = key;
-      lcd.setCursor(indeks - 1, 1);
+      lcd.setCursor(indeks, 1);
       lcd.print(key);
     }
   }
@@ -235,36 +248,43 @@ void saatPutarFile() {
   audioSedangDiputar = true;
   lcd.clear();
   lcd.print("Memutar file ");
+  lcd.setCursor(0, 1);
   lcd.print(nomorFile);
 }
 
 void saatTebakanJawaban() {
+  lcd.clear();
+  lcd.print("Masukkan tebakan:");
   char input[4] = "";
   dapatkanInputKeypad(input, sizeof(input));
   int tebakan = atoi(input);
 
   if (tebakan == nomorFile) {
     skor++;
-    lcd.clear();
-    lcd.print("Benar! Skor: ");
-    lcd.print(skor);
+    dfPlayer.play(287); // Play a specific "correct answer" sound
+    tampilkanPesan(("Benar! Skor: " + String(skor)).c_str());
   } else {
     skor--;
-    lcd.clear();
-    lcd.print("Salah! Skor: ");
-    lcd.print(skor);
+    dfPlayer.play(286); // Play a specific "wrong answer" sound
     jawabanSalah();
+    tampilkanPesan(("Salah! Skor: " + String(skor)).c_str());
   }
 
   if (skor == 0) {
-    lcd.clear();
-    lcd.print("Permainan Selesai");
-    while (true);
+    tampilkanPesan("Permainan Selesai");
+    dfPlayer.play(288); // Play a specific "game over" sound
   } else if (skor == 10) {
-    lcd.clear();
-    lcd.print("Anda Menang!");
-    while (true);
+    tampilkanPesan("Anda Menang!");
+    dfPlayer.play(289); // Play a specific "winning" sound
   } else {
     mintaKonfirmasi("Lanjutkan?", modeMenebak, tampilkanMenuUtama);
   }
+}
+
+// Display a message for a set duration
+void tampilkanPesan(const char* pesan) {
+  lcd.clear();
+  lcd.print(pesan);
+  pesanAktif = true;
+  waktuPesanMulai = millis();
 }

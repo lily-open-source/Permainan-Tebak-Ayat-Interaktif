@@ -1,66 +1,76 @@
 ```mermaid
-graph TD
-    A[Setup]
-    B[Main Loop]
-    C[Handle Buzzer Timing]
-    D[Check Audio Playback Status]
-    E[Check Keypad Input]
-    F[Process Keypad Input]
-    G[Show Main Menu]
-    H[Mendengarkan Mode]
-    I[Menebak Mode]
-    J[Minta Konfirmasi]
-    K[Handle Confirmation Yes/No]
-    L[Mendengarkan Manual]
-    M[Mendengarkan Random]
-    N[Play Audio]
-    O[Input Keypad]
-    P[Check Answer]
-    Q[Update Score]
-    R[Display Result]
-    S[System Running]
-    T[Handle Incorrect Answer]
-    
-    A --> S
-    S --> G
-    A --> B
-    B --> C
-    B --> D
-    B --> E
-    C --> C1[Turn off buzzer if needed]
-    D --> D1[Check if audio playback finished]
-    D1 --> G
-    E --> F
-    F --> F1{Audio Sedang Diputar?}
-    F1 -- Yes --> F2[Handle during playback if needed]
-    F1 -- No --> F3{Key Pressed}
-    F3 -- '1' --> J
-    F3 -- '2' --> J
-    J --> K
-    K --> K1{User Input}
-    K1 -- Yes --> K2{Key Pressed}
-    K2 -- 'Y' --> K3[Callback Yes]
-    K2 -- 'N' --> K4[Callback No]
-    K3 --> K5[Execute Callback Yes]
-    K4 --> K6[Execute Callback No]
-    K5 -- saatYaMendengarkan --> H
-    K6 -- saatTidakMendengarkan --> G
-    H --> H1{Manual or Random?}
-    H1 -- Manual --> L
-    H1 -- Random --> M
-    L --> O
-    M --> N
-    N --> N1[Play selected file]
-    N1 --> B
-    O --> O1[Get Keypad Input]
-    O1 --> N
-    I --> N
-    I --> O
-    P --> Q
-    Q --> R
-    R --> R1{Score Check}
-    R1 -- 0 --> R2[Game Over]
-    R1 -- 10 --> R3[You Win]
-    R1 -- Otherwise --> J
-    T --> T1[Turn on buzzer]
+flowchart TD
+    subgraph Setup
+        A1[Initialize LCD]
+        A2[Initialize Serial]
+        A3[Initialize dfPlayer]
+        A4[Check dfPlayer Connection]
+        A1 --> A2 --> A3 --> A4
+    end
+    A4 -->|Success| B[Main Loop]
+    A4 -->|Failure| A5[Display Error, Halt]
+
+    subgraph Main Loop
+        B1[Check Buzzer Timeout]
+        B2[Check Audio Playback Status]
+        B3[Check Keypad Input]
+        B4[Check Message Display Duration]
+        B --> B1 --> C{Buzzer Timeout?}
+        C -->|Yes| D[Turn off Buzzer]
+        C -->|No| E{Audio Playback Finished?}
+        E -->|Yes| F[Display Main Menu]
+        E -->|No| G{Keypad Input?}
+        G -->|Yes| H[Process Keypad Input]
+        G -->|No| I{Message Active?}
+        I -->|Yes| J[Check Message Duration]
+        J -->|Timeout| F
+        J -->|Not Timeout| B
+        I -->|No| B
+        H --> K{Key: 1 or 2}
+        K -->|1| L[Confirm Listening Mode]
+        K -->|2| M[Confirm Guessing Mode]
+        K -->|Other| B
+        L -->|Yes| N[Enter Listening Mode]
+        L -->|No| F
+        M -->|Yes| O[Enter Guessing Mode]
+        M -->|No| F
+    end
+
+    subgraph Listening Mode
+        N1[Display Listening Menu]
+        N2{Select Method}
+        N --> N1 --> N2
+        N2 -->|Manual| Q[Manual Listening]
+        N2 -->|Random| R[Random Listening]
+        Q --> S[Enter Track Number]
+        S --> T[Confirm Play]
+        T -->|Yes| U[Play Track]
+        T -->|No| F
+        R --> U
+    end
+
+    subgraph Guessing Mode
+        O1[Select Random Track]
+        O2[Confirm Guess]
+        O --> O1 --> O2
+        O2 -->|Yes| X[Enter Guess]
+        O2 -->|No| F
+        X --> Y{Correct Guess?}
+        Y -->|Yes| Z[Increase Score, Play Correct Sound]
+        Y -->|No| AA[Decrease Score, Play Wrong Sound]
+        Z --> AB{Score: 10?}
+        AB -->|Yes| AC[Display Win Message, Play Win Sound]
+        AB -->|No| AD[Continue Guessing?]
+        AD -->|Yes| O
+        AD -->|No| F
+        AA --> AE{Score: 0?}
+        AE -->|Yes| AF[Display Game Over Message, Play Game Over Sound]
+        AE -->|No| AD
+    end
+
+    F[Display Main Menu] --> B
+    D --> B
+    U --> B
+    Z --> B
+    AA --> B
 ```

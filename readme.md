@@ -19,25 +19,32 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 
 ### Koneksi
 
-- **Layar LCD**:
-  - SDA -> A4
-  - SCL -> A5
-- **Keypad**:
-  - Pin baris -> Pin digital 9, 8, 7
-  - Pin kolom -> Pin digital 6, 5, 4, 3
-- **DFPlayer Mini**:
-  - RX -> Pin digital 10
-  - TX -> Pin digital 11
-  - VCC -> 5V
-  - GND -> GND
-  - SPK1 -> Speaker+
-  - SPK2 -> Speaker-
-- **Buzzer**:
-  - Positif -> Pin digital 51
-  - Negatif -> GND
-- **LED**:
-  - Positif -> Pin digital 2
-  - Negatif -> GND
+| Komponen          | Arduino Pin       |
+|-------------------|-------------------|
+| **Layar LCD**     |                   |
+| SDA               | A4                |
+| SCL               | A5                |
+| **Keypad**        |                   |
+| Pin baris 1       | Pin digital 9     |
+| Pin baris 2       | Pin digital 8     |
+| Pin baris 3       | Pin digital 7     |
+| Pin kolom 1       | Pin digital 6     |
+| Pin kolom 2       | Pin digital 5     |
+| Pin kolom 3       | Pin digital 4     |
+| Pin kolom 4       | Pin digital 3     |
+| **DFPlayer Mini** |                   |
+| RX                | Pin digital 10    |
+| TX                | Pin digital 11    |
+| VCC               | 5V                |
+| GND               | GND               |
+| SPK1              | Speaker+          |
+| SPK2              | Speaker-          |
+| **Buzzer**        |                   |
+| Positif           | Pin digital 51    |
+| Negatif           | GND               |
+| **LED**           |                   |
+| Positif           | Pin digital 2     |
+| Negatif           | GND               |
 
 ## Instalasi dan Pengaturan
 
@@ -52,7 +59,7 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
      - **DFRobotDFPlayerMini**
 
 3. **Unggah Kode**:
-   - Buka kode Arduino yang disediakan (`ayat_mendengarkan_menebak.ino`) di Arduino IDE.
+   - Buka kode Arduino yang disediakan (`ayat-guessing-game.ino`) di Arduino IDE.
    - Hubungkan papan Arduino ke komputer Anda.
    - Pilih papan dan port yang sesuai dari menu **Tools**.
    - Klik tombol **Upload**.
@@ -109,7 +116,7 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 
 ### Fungsi Loop
 
-- Menangani waktu buzzer dan status pemutaran audio.
+- Menangani waktu buzzer dan status pemutaran audio dengan menggunakan `millis()` untuk non-blocking delays.
 - Memeriksa input keypad dan memprosesnya sesuai kebutuhan.
 
 ### Fungsi
@@ -120,6 +127,12 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 - `mintaKonfirmasi()`: Menampilkan pesan konfirmasi dan menunggu input dari pengguna.
 - `dapatkanInputKeypad()`: Mendapatkan input dari keypad.
 - `saatYaMendengarkan()`, `saatTidakMendengarkan()`, `saatYaMenebak()`, `saatTidakMenebak()`, `saatPutarFile()`, `saatTebakanJawaban()`: Fungsi callback untuk menangani input pengguna dan logika permainan.
+- `tampilkanPesan(const char*)`: Menampilkan pesan di LCD untuk durasi tertentu menggunakan `millis()`.
+
+### Perubahan Kode
+
+- **Konversi `String` ke `const char*`**: Menggunakan metode `c_str()` untuk mengonversi `String` menjadi `const char*` dalam pemanggilan fungsi `tampilkanPesan`.
+- **Penggunaan `millis()` untuk delay**: Menggantikan penggunaan `delay()` dengan `millis()` untuk implementasi delay yang tidak memblokir.
 
 ## Pemecahan Masalah
 
