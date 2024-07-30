@@ -129,11 +129,6 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 - `saatYaMendengarkan()`, `saatTidakMendengarkan()`, `saatYaMenebak()`, `saatTidakMenebak()`, `saatPutarFile()`, `saatTebakanJawaban()`: Fungsi callback untuk menangani input pengguna dan logika permainan.
 - `tampilkanPesan(const char*)`: Menampilkan pesan di LCD untuk durasi tertentu menggunakan `millis()`.
 
-### Perubahan Kode
-
-- **Konversi `String` ke `const char*`**: Menggunakan metode `c_str()` untuk mengonversi `String` menjadi `const char*` dalam pemanggilan fungsi `tampilkanPesan`.
-- **Penggunaan `millis()` untuk delay**: Menggantikan penggunaan `delay()` dengan `millis()` untuk implementasi delay yang tidak memblokir.
-
 ## Pemecahan Masalah
 
 - **LCD tidak menampilkan dengan benar**:
@@ -151,3 +146,8 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 - Tambahkan lebih banyak mode permainan atau tantangan.
 - Implementasikan fitur tambahan seperti batas waktu atau petunjuk.
 - Tingkatkan antarmuka pengguna dan mekanisme umpan balik.
+
+## Flowchart dan usecase sequence
+
+![flowchart](flowchart.png)
+![sequence](sequence.png)
