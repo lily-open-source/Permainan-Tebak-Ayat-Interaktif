@@ -1,3 +1,6 @@
+// Uncomment the following line to enable extended listening mode
+// #define EXTENDED_LISTENING_MODE
+
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <Keypad.h>
@@ -149,24 +152,28 @@ void tampilkanMenuUtama() {
 
 // Listening mode
 void modeMendengarkan() {
-  lcd.clear();
-  lcd.print("Pilih metode:");
-  lcd.setCursor(0, 1);
-  lcd.print("1: Manual");
-  lcd.setCursor(0, 3);
-  lcd.print("2: Random");
+  #ifdef EXTENDED_LISTENING_MODE
+    lcd.clear();
+    lcd.print("Pilih metode:");
+    lcd.setCursor(0, 1);
+    lcd.print("1: Manual");
+    lcd.setCursor(0, 3);
+    lcd.print("2: Random");
 
-  while (true) {
-    char key = keypad.getKey();
-    if (key == '1') {
-      mendengarkanManual();
-      break;
+    while (true) {
+      char key = keypad.getKey();
+      if (key == '1') {
+        mendengarkanManual();
+        break;
+      }
+      if (key == '2') {
+        mendengarkanRandom();
+        break;
+      }
     }
-    if (key == '2') {
-      mendengarkanRandom();
-      break;
-    }
-  }
+  #else
+    mendengarkanManual();
+  #endif
 }
 
 // Manual listening

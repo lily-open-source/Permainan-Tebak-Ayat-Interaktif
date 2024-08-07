@@ -7,12 +7,15 @@ sequenceDiagram
     participant Buzzer
     participant LED
 
+    alt system
     rect rgb(191, 223, 255)
     User->>Keypad: Press Key
     Keypad->>Arduino: Send Key Value
     Arduino->>LCD: Display Main Menu
     end
+    end
 
+    alt listening mode main
     rect rgb(255, 223, 191)
     User->>Keypad: Press 1 (Listening Mode)
     Keypad->>Arduino: Send Key Value
@@ -21,7 +24,9 @@ sequenceDiagram
     Keypad->>Arduino: Send Key Value
     Arduino->>LCD: Display Listening Mode Menu
     end
+    end
 
+    alt listening mode menu
     rect rgb(191, 255, 223)
     User->>Keypad: Press 1 or 2 (Manual/Random)
     Keypad->>Arduino: Send Key Value
@@ -36,7 +41,9 @@ sequenceDiagram
         Arduino->>Arduino: Generate Random Track Number
     end
     end
+    end
 
+    alt Playing audio
     rect rgb(223, 191, 255)
     Arduino->>DFPlayer: Play Track
     DFPlayer->>Arduino: Playing Status
@@ -44,7 +51,9 @@ sequenceDiagram
     DFPlayer->>Arduino: Track Finished
     Arduino->>LCD: Display Main Menu
     end
+    end
 
+    alt Guessing mode
     rect rgb(255, 223, 191)
     User->>Keypad: Press 2 (Guessing Mode)
     Keypad->>Arduino: Send Key Value
@@ -70,7 +79,10 @@ sequenceDiagram
         Arduino->>Arduino: Decrement Score
     end
     end
+    end
 
+    alt main display
     rect rgb(191, 255, 223)
     Arduino->>LCD: Display Main Menu or Game Over/Win
+    end
     end

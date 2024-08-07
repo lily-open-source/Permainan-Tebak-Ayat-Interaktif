@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permainan Tebak Ayat Interaktif</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #eee;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background: #333;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1, h2, h3 {
+            color: #f5a623;
+        }
+
+        a {
+            color: #f5a623;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .script-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #444;
+            border-radius: 8px;
+        }
+
+        ul {
+            list-style-type: square;
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .coffee-button {
+            height: 42px !important;
+            width: 151.9px !important;
+            margin-top: 50px !important;
+        }
+
+        pre.mermaid {
+            background: #222;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #f5a623;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #444;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Permainan Tebak Ayat Interaktif</h1>
+
+        <section class="script-section">
+            <h2>Gambaran Umum</h2>
+            <p>Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan menebak ayat-ayat Al-Qur'an. Sistem ini menggunakan LCD, keypad, modul MP3 DFPlayer Mini, dan buzzer. Pengguna dapat memilih untuk mendengarkan ayat secara acak atau dengan memilih nomor tertentu, lalu menebak ayat yang didengar. Sistem ini melacak skor pengguna dan memberikan umpan balik melalui layar LCD dan buzzer.</p>
+        </section>
+
+        <section class="script-section">
+        <h2>Komponen yang Digunakan</h2>
+        <ul>
+            <li><strong>Arduino Board</strong> (misalnya, Arduino Uno)</li>
+            <li><strong>LiquidCrystal_I2C</strong>: Layar LCD (20x4)</li>
+            <li><strong>Keypad</strong>: Keypad 3x4</li>
+            <li><strong>DFRobotDFPlayerMini</strong>: Modul pemutar MP3</li>
+            <li><strong>Buzzer</strong></li>
+            <li><strong>LED</strong></li>
+            <li><strong>Kartu SD</strong>: Berisi file audio (001.wav hingga 286.wav)</li>
+            <li><strong>Kabel dan Breadboard</strong></li>
+        </ul>
+        </section>
+
+        <section class="script-section">
+        <h2>Diagram Rangkaian</h2>
+        <h3>Koneksi</h3>
+        <table>
+            <tr>
+                <th>Komponen</th>
+                <th>Arduino Pin</th>
+            </tr>
+            <tr>
+                <td><strong>Layar LCD</strong></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>SDA</td>
+                <td>A4</td>
+            </tr>
+            <tr>
+                <td>SCL</td>
+                <td>A5</td>
+            </tr>
+            <tr>
+                <td><strong>Keypad</strong></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Pin baris 1</td>
+                <td>Pin digital 9</td>
+            </tr>
+            <tr>
+                <td>Pin baris 2</td>
+                <td>Pin digital 8</td>
+            </tr>
+            <tr>
+                <td>Pin baris 3</td>
+                <td>Pin digital 7</td>
+            </tr>
+            <tr>
+                <td>Pin kolom 1</td>
+                <td>Pin digital 6</td>
+            </tr>
+            <tr>
+                <td>Pin kolom 2</td>
+                <td>Pin digital 5</td>
+            </tr>
+            <tr>
+                <td>Pin kolom 3</td>
+                <td>Pin digital 4</td>
+            </tr>
+            <tr>
+                <td>Pin kolom 4</td>
+                <td>Pin digital 3</td>
+            </tr>
+            <tr>
+                <td><strong>DFPlayer Mini</strong></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>RX</td>
+                <td>Pin digital 10</td>
+            </tr>
+            <tr>
+                <td>TX</td>
+                <td>Pin digital 11</td>
+            </tr>
+            <tr>
+                <td>VCC</td>
+                <td>5V</td>
+            </tr>
+            <tr>
+                <td>GND</td>
+                <td>GND</td>
+            </tr>
+            <tr>
+                <td>SPK1</td>
+                <td>Speaker+</td>
+            </tr>
+            <tr>
+                <td>SPK2</td>
+                <td>Speaker-</td>
+            </tr>
+            <tr>
+                <td><strong>Buzzer</strong></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Positif</td>
+                <td>Pin digital 51</td>
+            </tr>
+            <tr>
+                <td>Negatif</td>
+                <td>GND</td>
+            </tr>
+            <tr>
+                <td><strong>LED</strong></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Positif</td>
+                <td>Pin digital 2</td>
+            </tr>
+            <tr>
+                <td>Negatif</td>
+                <td>GND</td>
+            </tr>
+        </table>
+        </section>
+
+        <section class="script-section">
+        <h2>Instalasi dan Pengaturan</h2>
+        <ol>
+            <li>
+                <strong>Install Arduino IDE</strong>: Unduh dan instal Arduino IDE dari <a href="https://www.arduino.cc/en/Main/Software">situs web Arduino</a>.
+            </li>
+            <li>
+                <strong>Instalasi Perpustakaan</strong>:
+                <ul>
+                    <li>Buka Arduino IDE.</li>
+                    <li>Pergi ke <strong>Sketch</strong> -> <strong>Include Library</strong> -> <strong>Manage Libraries</strong>.</li>
+                    <li>Instal perpustakaan berikut:
+                        <ul>
+                            <li><strong>Wire</strong> (Biasanya sudah terinstal)</li>
+                            <li><strong>LiquidCrystal_I2C</strong></li>
+                            <li><strong>Keypad</strong></li>
+                            <li><strong>DFRobotDFPlayerMini</strong></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <strong>Unggah Kode</strong>:
+                <ul>
+                    <li>Buka kode Arduino yang disediakan (<code>ayat-guessing-game.ino</code>) di Arduino IDE.</li>
+                    <li>Hubungkan papan Arduino ke komputer Anda.</li>
+                    <li>Pilih papan dan port yang sesuai dari menu <strong>Tools</strong>.</li>
+                    <li>Klik tombol <strong>Upload</strong>.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Siapkan Kartu SD</strong>:
+                <ul>
+                    <li>Format kartu SD ke FAT32.</li>
+                    <li>Salin file audio (001.wav hingga 286.wav) ke direktori root kartu SD.</li>
+                    <li>Masukkan kartu SD ke modul DFPlayer Mini.</li>
+                </ul>
+            </li>
+        </ol>
+        </section>
+
+        <section class="script-section">
+        <h2>Cara Menggunakan</h2>
+        <ol>
+            <li>
+                <strong>Nyalakan Sistem</strong>:
+                <ul>
+                    <li>Hubungkan Arduino ke sumber daya (USB atau catu daya eksternal).</li>
+                    <li>Sistem akan melakukan inisialisasi, dan LCD akan menampilkan menu utama.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Menu Utama</strong>:
+                <ul>
+                    <li>LCD akan menampilkan "Selamat Datang!" dan meminta pengguna untuk memilih mode permainan:</li>
+                    <li>Tekan <code>1</code> untuk masuk ke mode <strong>Dengar Ayat</strong>.</li>
+                    <li>Tekan <code>2</code> untuk masuk ke mode <strong>Tebak Ayat</strong>.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Dengar Ayat</strong>:
+                <ul>
+                    <li>Sistem akan menanyakan apakah Anda ingin memilih track secara manual atau acak:</li>
+                    <li>Tekan <code>1</code> untuk input manual: Sistem akan meminta nomor ayat.</li>
+                    <li>Tekan <code>2</code> untuk memilih secara acak: Sistem akan memilih ayat secara acak.</li>
+                    <li>Konfirmasikan pilihan Anda dengan menekan <code>Y</code> (Ya) atau batalkan dengan menekan <code>N</code> (Tidak).</li>
+                    <li>Ayat yang dipilih akan diputar, dan LCD akan menampilkan statusnya.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Tebak Ayat</strong>:
+                <ul>
+                    <li>Sistem akan memilih ayat secara acak untuk ditebak.</li>
+                    <li>Setelah mendengarkan, Anda akan diminta untuk menebak nomor ayat.</li>
+                    <li>Masukkan tebakan Anda menggunakan keypad dan konfirmasi.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Skor</strong>:
+                <ul>
+                    <li>Tebakan yang benar meningkatkan skor Anda sebesar 1.</li>
+                    <li>Tebakan yang salah mengurangi skor Anda sebesar 1 dan memicu buzzer.</li>
+                    <li>Permainan berlanjut hingga skor Anda mencapai 0 (Permainan Selesai) atau 10 (Anda Menang).</li>
+                </ul>
+            </li>
+        </ol>
+        </section>
+
+        <section class="script-section">
+        <h2>Penjelasan Kode</h2>
+        <h3>Variabel dan Konstanta</h3>
+        <ul>
+            <li><code>LiquidCrystal_I2C lcd(0x27, 20, 4)</code>: Inisialisasi LCD dengan alamat I2C 0x27 dan dimensi 20x4.</li>
+            <li><code>Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS)</code>: Inisialisasi keypad.</li>
+            <li><code>const char* trackNames[]</code>: Array nama track dari 001.wav hingga 286.wav.</li>
+            <li><code>const int ledPin = 2</code>, <code>const int buzzerPin = 51</code>: Penugasan pin untuk LED dan buzzer.</li>
+            <li><code>int skor = 5</code>: Skor awal.</li>
+            <li><code>int nomorFile</code>: Variabel untuk menyimpan nomor file saat ini.</li>
+            <li><code>bool audioSedangDiputar = false</code>: Flag untuk memeriksa apakah audio sedang diputar.</li>
+        </ul>
+
+        <h3>Fungsi Setup</h3>
+        <ul>
+            <li>Menginisialisasi LCD, komunikasi serial, dan mengatur mode pin.</li>
+            <li>Memeriksa apakah DFPlayer Mini terhubung dan memulai sistem.</li>
+        </ul>
+
+        <h3>Fungsi Loop</h3>
+        <ul>
+            <li>Menangani waktu buzzer dan status pemutaran audio dengan menggunakan <code>millis()</code> untuk non-blocking delays.</li>
+            <li>Memeriksa input keypad dan memprosesnya sesuai kebutuhan.</li>
+        </ul>
+
+        <h3>Fungsi-fungsi lain</h3>
+        <ul>
+            <li><code>tampilkanMenuUtama()</code>: Menampilkan menu utama di LCD.</li>
+            <li><code>modeMendengarkan()</code>: Menangani mode mendengarkan.</li>
+            <li><code>modeMenebak()</code>: Menangani mode menebak.</li>
+            <li><code>mintaKonfirmasi()</code>: Menampilkan pesan konfirmasi dan menunggu input dari pengguna.</li>
+            <li><code>dapatkanInputKeypad()</code>: Mendapatkan input dari keypad.</li>
+            <li><code>saatYaMendengarkan()</code>, <code>saatTidakMendengarkan()</code>, <code>saatYaMenebak()</code>, <code>saatTidakMenebak()</code>, <code>saatPutarFile()</code>, <code>saatTebakanJawaban()</code>: Fungsi callback untuk menangani input pengguna dan logika permainan.</li>
+            <li><code>tampilkanPesan(const char*)</code>: Menampilkan pesan di LCD untuk durasi tertentu menggunakan <code>millis()</code>.</li>
+        </ul>
+        </section>
+
+        <section class="script-section">
+        <h2>Pemecahan Masalah</h2>
+        <ul>
+            <li>
+                <strong>LCD tidak menampilkan dengan benar</strong>:
+                <ul>
+                    <li>Periksa alamat I2C dan koneksi.</li>
+                    <li>Pastikan perpustakaan LCD terinstal dengan benar.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>DFPlayer Mini tidak terdeteksi</strong>:
+                <ul>
+                    <li>Periksa koneksi dan kartu SD.</li>
+                    <li>Pastikan file audio diberi nama dengan benar dan ditempatkan di direktori root.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Buzzer tidak berfungsi</strong>:
+                <ul>
+                    <li>Periksa koneksi pin.</li>
+                    <li>Pastikan pin buzzer ditugaskan dengan benar dalam kode.</li>
+                </ul>
+            </li>
+        </ul>
+        </section>
+
+        <section class="script-section">
+        <h2>Peningkatan lanjut</h2>
+        <ul>
+            <li>Tambahkan lebih banyak mode permainan atau tantangan.</li>
+            <li>Implementasikan fitur tambahan seperti batas waktu atau petunjuk.</li>
+            <li>Tingkatkan antarmuka pengguna dan mekanisme umpan balik.</li>
+        </ul>
+
+        <h2>Flowchart dan usecase sequence</h2>
+        <img src="./flowchart.png" alt="Flowchart" />
+        <img src="./sequence.png" alt="Sequence Diagram" />
+
+        </section>
+
+        <footer>
+            <p>© 2024 Permainan Tebak Ayat Interaktif. All rights reserved.</p>
+            <a href="https://www.buymeacoffee.com/azzar" target="_blank">
+                <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" class="coffee-button">
+            </a>
+        </footer>
+    </div>
+</body>
+</html>

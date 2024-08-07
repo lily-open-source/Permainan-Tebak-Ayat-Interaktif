@@ -2,7 +2,7 @@
 
 ## Gambaran Umum
 
-Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan menebak ayat-ayat Al-Qur'an. Sistem ini menggunakan LCD, keypad, modul MP3 DFPlayer Mini, dan buzzer. Pengguna dapat memilih untuk mendengarkan ayat secara acak atau dengan memilih nomor tertentu, lalu menebak ayat yang didengar. Sistem ini melacak skor pengguna dan memberikan umpan balik melalui layar LCD dan buzzer.
+Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan menebak ayat-ayat Al-Qur'an. Sistem ini menggunakan LCD, keypad, modul MP3 DFPlayer Mini, buzzer, dan amplifier audio dengan speaker. Pengguna dapat memilih untuk mendengarkan ayat secara acak atau dengan memilih nomor tertentu, lalu menebak ayat yang didengar. Sistem ini melacak skor pengguna dan memberikan umpan balik melalui layar LCD dan buzzer.
 
 ## Komponen yang Digunakan
 
@@ -12,6 +12,8 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 - **DFRobotDFPlayerMini**: Modul pemutar MP3
 - **Buzzer**
 - **LED**
+- **Audio Amplifier Module**
+- **Speaker**
 - **Kartu SD**: Berisi file audio (001.wav hingga 286.wav)
 - **Kabel dan Breadboard**
 
@@ -37,8 +39,15 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 | TX                | Pin digital 11    |
 | VCC               | 5V                |
 | GND               | GND               |
-| SPK1              | Speaker+          |
-| SPK2              | Speaker-          |
+| SPK1              | Audio input+ (Amplifier)|
+| SPK2              | Audio input- (Amplifier)|
+| **Audio Amplifier Module**|           |
+| Audio Input+      | SPK1 (DFPlayer Mini)|
+| Audio Input-      | SPK2 (DFPlayer Mini)|
+| Audio Output+     | Speaker+          |
+| Audio Output-     | Speaker-          |
+| VCC               | 5V                |
+| GND               | GND               |
 | **Buzzer**        |                   |
 | Positif           | Pin digital 51    |
 | Negatif           | GND               |
@@ -81,7 +90,7 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
      - Tekan `2` untuk masuk ke mode **Tebak Ayat**.
 
 3. **Dengar Ayat**:
-   - Sistem akan menanyakan apakah Anda ingin memilih track secara manual atau acak:
+   - Sistem akan menanyakan apakah Anda ingin memilih track secara manual atau acak (jika mode extended diaktifkan):
      - Tekan `1` untuk input manual: Sistem akan meminta nomor ayat.
      - Tekan `2` untuk memilih secara acak: Sistem akan memilih ayat secara acak.
    - Konfirmasikan pilihan Anda dengan menekan `Y` (Ya) atau batalkan dengan menekan `N` (Tidak).
@@ -123,6 +132,8 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 
 - `tampilkanMenuUtama()`: Menampilkan menu utama di LCD.
 - `modeMendengarkan()`: Menangani mode mendengarkan.
+- `mendengarkanManual()`: Menangani mode mendengarkan manual.
+- `mendengarkanRandom()`: Menangani mode mendengarkan acak.
 - `modeMenebak()`: Menangani mode menebak.
 - `mintaKonfirmasi()`: Menampilkan pesan konfirmasi dan menunggu input dari pengguna.
 - `dapatkanInputKeypad()`: Mendapatkan input dari keypad.
@@ -140,6 +151,9 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 - **Buzzer tidak berfungsi**:
   - Periksa koneksi pin.
   - Pastikan pin buzzer ditugaskan dengan benar dalam kode.
+- **Speaker tidak menghasilkan suara**:
+  - Periksa koneksi antara DFPlayer Mini dan modul amplifier.
+  - Pastikan speaker terhubung dengan benar ke modul amplifier.
 
 ## Peningkatan di Masa Depan
 
@@ -147,7 +161,7 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 - Implementasikan fitur tambahan seperti batas waktu atau petunjuk.
 - Tingkatkan antarmuka pengguna dan mekanisme umpan balik.
 
-## Flowchart dan usecase sequence
+## Flowchart dan Usecase Sequence
 
 ![flowchart](flowchart.png)
 ![sequence](sequence.png)
