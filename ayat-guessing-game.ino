@@ -1,5 +1,5 @@
 // Uncomment the following line to enable extended listening mode
-// #define EXTENDED_LISTENING_MODE
+//#define EXTENDED_LISTENING_MODE
 
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
@@ -7,6 +7,7 @@
 #include <SD.h>
 #include <SPI.h>
 #include <DFRobotDFPlayerMini.h>
+#include "track.h"  // Include the track names
 
 DFRobotDFPlayerMini dfPlayer;
 
@@ -21,19 +22,12 @@ char keys[ROWS][COLS] = {
   {'2', '3', '4', '5'},
   {'6', '7', '8', '9'}
 };
-byte rowPins[ROWS] = {9, 8, 7};
-byte colPins[COLS] = {6, 5, 4, 3};
+byte rowPins[ROWS] = {5, 4, 3};
+byte colPins[COLS] = {9, 8, 7, 6};
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
-// Array of track names
-const char* trackNames[] = {
-  "001.wav", "002.wav", "003.wav", "004.wav", "005.wav",
-  // ... add remaining track names here
-  "286.wav"
-};
-
 // Pin configuration
-const int ledPin = 2;
+const int ledPin = 50;
 const int buzzerPin = 51;
 
 // Variables
@@ -50,7 +44,7 @@ bool pesanAktif = false;
 void tampilkanMenuUtama();
 void modeMendengarkan();
 void modeMenebak();
-void putarFileAudio(int nomorFile);
+void playAudioFile(int trackNumber);
 void mintaKonfirmasi(const char* pesan, void (*callbackYa)(), void (*callbackTidak)());
 void dapatkanInputKeypad(char* bufferInput, size_t ukuranBuffer);
 void prosesInputKeypad(char key);
@@ -196,6 +190,8 @@ void mendengarkanRandom() {
 // Guessing mode
 void modeMenebak() {
   nomorFile = random(1, 287);
+  playAudioFile(nomorFile);
+  audioSedangDiputar = true;
   mintaKonfirmasi("Tebak nomor?", saatTebakanJawaban, tampilkanMenuUtama);
 }
 
@@ -233,6 +229,16 @@ void dapatkanInputKeypad(char* bufferInput, size_t ukuranBuffer) {
   bufferInput[indeks] = '\0';
 }
 
+// Play audio file based on track number
+void playAudioFile(int trackNumber) {
+  dfPlayer.play(trackNumber);
+  audioSedangDiputar = true;
+  lcd.clear();
+  lcd.print("Memutar file ");
+  lcd.setCursor(0, 1);
+  lcd.print(trackNames[trackNumber - 1]);  // Display the track name
+}
+
 // Callback functions
 void saatYaMendengarkan() {
   modeMendengarkan();
@@ -251,12 +257,7 @@ void saatTidakMenebak() {
 }
 
 void saatPutarFile() {
-  dfPlayer.play(nomorFile);
-  audioSedangDiputar = true;
-  lcd.clear();
-  lcd.print("Memutar file ");
-  lcd.setCursor(0, 1);
-  lcd.print(nomorFile);
+  playAudioFile(nomorFile);
 }
 
 void saatTebakanJawaban() {
@@ -284,14 +285,14 @@ void saatTebakanJawaban() {
     tampilkanPesan("Anda Menang!");
     dfPlayer.play(289); // Play a specific "winning" sound
   } else {
-    mintaKonfirmasi("Lanjutkan?", modeMenebak, tampilkanMenuUtama);
+    mintaKonfirmasi("Main lagi?", saatYaMendengarkan, tampilkanMenuUtama);
   }
 }
 
-// Display a message for a set duration
+// Display a temporary message
 void tampilkanPesan(const char* pesan) {
   lcd.clear();
   lcd.print(pesan);
-  pesanAktif = true;
   waktuPesanMulai = millis();
+  pesanAktif = true;
 }

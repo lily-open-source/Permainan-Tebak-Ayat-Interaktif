@@ -27,13 +27,13 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 | SDA               | A4                |
 | SCL               | A5                |
 | **Keypad**        |                   |
-| Pin baris 1       | Pin digital 9     |
-| Pin baris 2       | Pin digital 8     |
-| Pin baris 3       | Pin digital 7     |
-| Pin kolom 1       | Pin digital 6     |
-| Pin kolom 2       | Pin digital 5     |
-| Pin kolom 3       | Pin digital 4     |
-| Pin kolom 4       | Pin digital 3     |
+| Pin baris 1       | Pin digital 5     |
+| Pin baris 2       | Pin digital 4     |
+| Pin baris 3       | Pin digital 3     |
+| Pin kolom 1       | Pin digital 9     |
+| Pin kolom 2       | Pin digital 8     |
+| Pin kolom 3       | Pin digital 7     |
+| Pin kolom 4       | Pin digital 6     |
 | **DFPlayer Mini** |                   |
 | RX                | Pin digital 10    |
 | TX                | Pin digital 11    |
@@ -52,7 +52,7 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 | Positif           | Pin digital 51    |
 | Negatif           | GND               |
 | **LED**           |                   |
-| Positif           | Pin digital 2     |
+| Positif           | Pin digital 51     |
 | Negatif           | GND               |
 
 ## Instalasi dan Pengaturan
