@@ -161,7 +161,8 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 - Implementasikan fitur tambahan seperti batas waktu atau petunjuk.
 - Tingkatkan antarmuka pengguna dan mekanisme umpan balik.
 
-## Flowchart dan Usecase Sequence
+## Flowchart, Usecase Sequence and images
 
 ![flowchart](flowchart.png)
 ![sequence](sequence.png)
+![mega-pinout](mega-pinout.jpg)

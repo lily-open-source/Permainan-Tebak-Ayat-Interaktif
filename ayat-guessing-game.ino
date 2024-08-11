@@ -12,7 +12,7 @@
 DFRobotDFPlayerMini dfPlayer;
 
 // LCD configuration
-LiquidCrystal_I2C lcd(0x27, 20, 4);
+LiquidCrystal_I2C lcd(0x22, 20, 4);
 
 // Keypad configuration
 const byte ROWS = 3;
@@ -72,6 +72,15 @@ void setup() {
 
   if (!dfPlayer.begin(Serial1)) {
     Serial.println("DFPlayer Mini tidak terdeteksi.");
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Selamat Datang!");
+    lcd.setCursor(0, 1);
+    lcd.print("mohon maaf, tetapi");
+    lcd.setCursor(0, 2);
+    lcd.print("DFPlayer Mini");
+    lcd.setCursor(0, 3);
+    lcd.print("tidak terdeteksi.");
     while (true);
   }
 
