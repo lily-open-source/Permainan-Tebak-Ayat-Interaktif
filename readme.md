@@ -2,11 +2,11 @@
 
 ## Gambaran Umum
 
-Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan menebak ayat-ayat Al-Qur'an. Sistem ini menggunakan LCD, keypad, modul MP3 DFPlayer Mini, buzzer, dan amplifier audio dengan speaker. Pengguna dapat memilih untuk mendengarkan ayat secara acak atau dengan memilih nomor tertentu, lalu menebak ayat yang didengar. Sistem ini melacak skor pengguna dan memberikan umpan balik melalui layar LCD dan buzzer.
+Proyek ini adalah sistem berbasis Arduino yang memungkinkan pengguna mendengarkan dan menebak ayat-ayat Al-Qur'an. Sistem ini memanfaatkan komponen seperti LCD, keypad, modul MP3 DFPlayer Mini, buzzer, dan amplifier audio dengan speaker. Pengguna dapat memilih untuk mendengarkan ayat secara acak atau berdasarkan nomor tertentu, lalu menebak ayat yang didengar. Skor pengguna dilacak, dan sistem memberikan umpan balik melalui layar LCD dan buzzer.
 
 ## Komponen yang Digunakan
 
-- **Arduino Board** (misalnya, Arduino Uno)
+- **Arduino Board** (misalnya, Arduino Mega)
 - **LiquidCrystal_I2C**: Layar LCD (20x4)
 - **Keypad**: Keypad 3x4
 - **DFRobotDFPlayerMini**: Modul pemutar MP3
@@ -52,7 +52,7 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 | Positif           | Pin digital 51    |
 | Negatif           | GND               |
 | **LED**           |                   |
-| Positif           | Pin digital 51     |
+| Positif           | Pin digital 50    |
 | Negatif           | GND               |
 
 ## Instalasi dan Pengaturan
@@ -90,7 +90,7 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
      - Tekan `2` untuk masuk ke mode **Tebak Ayat**.
 
 3. **Dengar Ayat**:
-   - Sistem akan menanyakan apakah Anda ingin memilih track secara manual atau acak (jika mode extended diaktifkan):
+   - Sistem akan menanyakan apakah Anda ingin memilih track secara manual atau acak:
      - Tekan `1` untuk input manual: Sistem akan meminta nomor ayat.
      - Tekan `2` untuk memilih secara acak: Sistem akan memilih ayat secara acak.
    - Konfirmasikan pilihan Anda dengan menekan `Y` (Ya) atau batalkan dengan menekan `N` (Tidak).
@@ -110,35 +110,29 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 
 ### Variabel dan Konstanta
 
-- `LiquidCrystal_I2C lcd(0x27, 20, 4)`: Inisialisasi LCD dengan alamat I2C 0x27 dan dimensi 20x4.
+- `LiquidCrystal_I2C lcd(0x22, 20, 4)`: Inisialisasi LCD dengan alamat I2C 0x22 dan dimensi 20x4.
 - `Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS)`: Inisialisasi keypad.
-- `const char* trackNames[]`: Array nama track dari 001.wav hingga 286.wav.
-- `const int ledPin = 2`, `const int buzzerPin = 51`: Penugasan pin untuk LED dan buzzer.
+- `const int ledPin = 50`, `const int buzzerPin = 51`: Penugasan pin untuk LED dan buzzer.
 - `int skor = 5`: Skor awal.
-- `int nomorFile`: Variabel untuk menyimpan nomor file saat ini.
 - `bool audioSedangDiputar = false`: Flag untuk memeriksa apakah audio sedang diputar.
+- `bool sdCardStatus = false`: Status kartu SD untuk verifikasi saat sistem berjalan.
 
 ### Fungsi Setup
 
 - Menginisialisasi LCD, komunikasi serial, dan mengatur mode pin.
-- Memeriksa apakah DFPlayer Mini terhubung dan memulai sistem.
+- Memeriksa DFPlayer Mini dan kartu SD, kemudian menginisialisasi sistem jika semua komponen bekerja dengan baik.
 
 ### Fungsi Loop
 
 - Menangani waktu buzzer dan status pemutaran audio dengan menggunakan `millis()` untuk non-blocking delays.
 - Memeriksa input keypad dan memprosesnya sesuai kebutuhan.
+- Menampilkan pesan di LCD untuk durasi tertentu dengan menggunakan `millis()`.
 
-### Fungsi
+### Fungsi Tambahan
 
+- `periksaKomponen()`: Memeriksa apakah DFPlayer Mini dan kartu SD berfungsi dengan baik.
 - `tampilkanMenuUtama()`: Menampilkan menu utama di LCD.
-- `modeMendengarkan()`: Menangani mode mendengarkan.
-- `mendengarkanManual()`: Menangani mode mendengarkan manual.
-- `mendengarkanRandom()`: Menangani mode mendengarkan acak.
-- `modeMenebak()`: Menangani mode menebak.
-- `mintaKonfirmasi()`: Menampilkan pesan konfirmasi dan menunggu input dari pengguna.
-- `dapatkanInputKeypad()`: Mendapatkan input dari keypad.
-- `saatYaMendengarkan()`, `saatTidakMendengarkan()`, `saatYaMenebak()`, `saatTidakMenebak()`, `saatPutarFile()`, `saatTebakanJawaban()`: Fungsi callback untuk menangani input pengguna dan logika permainan.
-- `tampilkanPesan(const char*)`: Menampilkan pesan di LCD untuk durasi tertentu menggunakan `millis()`.
+- `prosesInputKeypad(char key)`: Memproses input dari keypad dan menentukan aksi yang sesuai.
 
 ## Pemecahan Masalah
 
@@ -161,7 +155,7 @@ Proyek ini adalah sistem berbasis Arduino sederhana untuk mendengarkan dan meneb
 - Implementasikan fitur tambahan seperti batas waktu atau petunjuk.
 - Tingkatkan antarmuka pengguna dan mekanisme umpan balik.
 
-## Flowchart, Usecase Sequence and images
+## Flowchart, Usecase Sequence, dan Gambar
 
 ![flowchart](flowchart.png)
 ![sequence](sequence.png)
